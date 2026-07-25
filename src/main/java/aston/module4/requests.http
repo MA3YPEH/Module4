@@ -1,0 +1,12 @@
+### Добавление нового пользователя
+POST http://localhost:8080/module4/users
+Content-Type: application/json
+
+{
+  "name": "Aston",
+  "email": "aston@mail.ru",
+  "age": 29
+}
+
+### Получение списка всех пользователей
+GET http://localhost:8080/module4/users
