@@ -3,10 +3,26 @@ POST http://localhost:8080/module4/users
 Content-Type: application/json
 
 {
-  "name": "Aston",
-  "email": "aston@mail.ru",
-  "age": 29
+  "name": "Ivan",
+  "email": "ivan@mail.ru",
+  "age": 18
 }
 
 ### Получение списка всех пользователей
 GET http://localhost:8080/module4/users
+
+### Удаление пользователя
+DELETE http://localhost:8080/module4/users/4
+
+### Получение пользователя по ID
+GET http://localhost:8080/module4/users/2
+
+### Обновление пользователя
+PUT http://localhost:8080/module4/users/2
+Content-Type: application/json
+
+{
+  "name": "Ivan",
+  "email": "ivan@mail.ru",
+  "age": 18
+}
