@@ -4,17 +4,17 @@ import aston.module4.entity.User;
 
 import java.time.LocalDate;
 
-public class UserGetDto {
+public class UserResponseDto {
     private Long id;
     private String name;
     private String email;
     private Integer age;
     private LocalDate createdAt;
 
-    public static UserGetDto fromEntity(User user) {
+    public static UserResponseDto fromEntity(User user) {
         if (user == null) return null;
 
-        UserGetDto dto = new UserGetDto();
+        UserResponseDto dto = new UserResponseDto();
         dto.setId(user.getId());
         dto.setName(user.getName());
         dto.setEmail(user.getEmail());

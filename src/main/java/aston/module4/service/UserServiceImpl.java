@@ -1,13 +1,10 @@
 package aston.module4.service;
 
-import aston.module4.controller.UserController;
 import aston.module4.dto.UserCreateUpdateDto;
-import aston.module4.dto.UserGetDto;
+import aston.module4.dto.UserResponseDto;
 import aston.module4.entity.User;
 import aston.module4.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,7 +23,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserGetDto createUser(UserCreateUpdateDto dto) {
+    public UserResponseDto createUser(UserCreateUpdateDto dto) {
         if (userRepository.existsByEmail(dto.getEmail())) {
             throw new IllegalArgumentException("Пользователь с таким email уже существует");
         }
@@ -34,27 +31,27 @@ public class UserServiceImpl implements UserService {
         User user = dto.toEntity();
         User savedUser = userRepository.save(user);
 
-        return UserGetDto.fromEntity(savedUser);
+        return UserResponseDto.fromEntity(savedUser);
     }
 
     @Override
-    public UserGetDto getUserById(Long id) {
+    public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с ID " + id + " не найден"));
 
-        return UserGetDto.fromEntity(user);
+        return UserResponseDto.fromEntity(user);
     }
 
     @Override
-    public List<UserGetDto> getAllUsers() {
+    public List<UserResponseDto> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(UserGetDto::fromEntity)
+                .map(UserResponseDto::fromEntity)
                 .collect(Collectors.toList());
     }
 
     @Override
     @Transactional
-    public UserGetDto updateUser(Long id, UserCreateUpdateDto dto) {
+    public UserResponseDto updateUser(Long id, UserCreateUpdateDto dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Пользователь с ID " + id + " не найден"));
 
@@ -64,7 +61,7 @@ public class UserServiceImpl implements UserService {
 
         dto.updateEntity(user);
 
-        return UserGetDto.fromEntity(user);
+        return UserResponseDto.fromEntity(user);
     }
 
     @Override
