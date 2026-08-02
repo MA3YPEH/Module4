@@ -4,7 +4,7 @@ Content-Type: application/json
 
 {
   "name": "Egor",
-  "email": "egor@mail.ru",
+  "email": "ega007.m@yabdex.ru",
   "age": 29
 }
 
@@ -22,7 +22,16 @@ PUT http://localhost:8080/module4/users/2
 Content-Type: application/json
 
 {
-  "name": "Ivan",
-  "email": "ivan@mail.ru",
+  "name": "Aston",
+  "email": "atata@mail.ru",
   "age": 18
+}
+
+### Отправка произвольного текстового сообщения через тег MESSAGE
+POST http://localhost:8081/module4/notifications/message
+Content-Type: application/json
+
+{
+  "email": "ega007.m@yandex.ru",
+  "operation": "MESSAGE:Привет! Это полностью произвольный текст сообщения, отправленный без использования жестких шаблонов."
 }
