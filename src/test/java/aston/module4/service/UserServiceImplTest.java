@@ -42,7 +42,6 @@ class UserServiceImplTest {
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
 
         verify(userRepository, never()).save(any(User.class));
-
         verify(kafkaTemplate, never()).send(anyString(), any());
     }
 
