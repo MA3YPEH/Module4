@@ -23,6 +23,9 @@ class UserServiceImplTest {
     @Mock
     private UserRepository userRepository;
 
+    @Mock
+    private org.springframework.kafka.core.KafkaTemplate<String, Object> kafkaTemplate;
+
     @InjectMocks
     private UserServiceImpl userService;
 
@@ -31,14 +34,16 @@ class UserServiceImplTest {
     void testCreateUserThrowsExceptionWhenEmailExists() {
         UserCreateUpdateDto dto = new UserCreateUpdateDto();
         dto.setName("Egor");
-        dto.setEmail("egor@mail.ru");
+        dto.setEmail("ega007.m@yandex.ru");
         dto.setAge(29);
 
-        when(userRepository.existsByEmail("egor@mail.ru")).thenReturn(true);
+        when(userRepository.existsByEmail("ega007.m@yandex.ru")).thenReturn(true);
 
         assertThrows(IllegalArgumentException.class, () -> userService.createUser(dto));
 
         verify(userRepository, never()).save(any(User.class));
+
+        verify(kafkaTemplate, never()).send(anyString(), any());
     }
 
     @Test
@@ -46,14 +51,14 @@ class UserServiceImplTest {
     void testCreateUserSuccess() {
         UserCreateUpdateDto dto = new UserCreateUpdateDto();
         dto.setName("Egor");
-        dto.setEmail("egor@mail.ru");
+        dto.setEmail("ega007.m@yandex.ru");
         dto.setAge(29);
 
         User userToSave = dto.toEntity();
         User savedUser = dto.toEntity();
         savedUser.setId(1L);
 
-        when(userRepository.existsByEmail("egor@mail.ru")).thenReturn(false);
+        when(userRepository.existsByEmail("ega007.m@yandex.ru")).thenReturn(false);
         when(userRepository.save(any(User.class))).thenReturn(savedUser);
 
         UserResponseDto result = userService.createUser(dto);
@@ -61,10 +66,12 @@ class UserServiceImplTest {
         assertNotNull(result);
         assertEquals(1L, result.getId());
         assertEquals("Egor", result.getName());
-        assertEquals("egor@mail.ru", result.getEmail());
+        assertEquals("ega007.m@yandex.ru", result.getEmail());
 
-        verify(userRepository, times(1)).existsByEmail("egor@mail.ru");
+        verify(userRepository, times(1)).existsByEmail("ega007.m@yandex.ru");
         verify(userRepository, times(1)).save(any(User.class));
+
+        verify(kafkaTemplate, times(1)).send(anyString(), any());
     }
 
     @Test

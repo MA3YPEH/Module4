@@ -5,6 +5,7 @@ import aston.module4.dto.UserResponseDto;
 import aston.module4.entity.User;
 import aston.module4.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,9 +17,11 @@ import java.util.stream.Collectors;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final KafkaTemplate<String, String> kafkaTemplate;
 
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, KafkaTemplate<String, String> kafkaTemplate) {
         this.userRepository = userRepository;
+        this.kafkaTemplate = kafkaTemplate;
     }
 
     @Override
@@ -30,6 +33,8 @@ public class UserServiceImpl implements UserService {
 
         User user = dto.toEntity();
         User savedUser = userRepository.save(user);
+
+        kafkaTemplate.send("user-events", "CREATE:" + savedUser.getEmail());
 
         return UserResponseDto.fromEntity(savedUser);
     }
@@ -61,15 +66,20 @@ public class UserServiceImpl implements UserService {
 
         dto.updateEntity(user);
 
+        kafkaTemplate.send("user-events", "UPDATE:" + user.getEmail());
+
         return UserResponseDto.fromEntity(user);
     }
 
     @Override
     @Transactional
     public void deleteUser(Long id) {
+        User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Пользователь с таким ID не найден"));
         if (!userRepository.existsById(id)) {
             throw new EntityNotFoundException("Пользователь с ID " + id + " не найден");
         }
         userRepository.deleteById(id);
+
+        kafkaTemplate.send("user-events", "DELETE:" + user.getEmail());
     }
 }

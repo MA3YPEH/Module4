@@ -3,9 +3,9 @@ POST http://localhost:8080/module4/users
 Content-Type: application/json
 
 {
-  "name": "Ivan",
-  "email": "ivan@mail.ru",
-  "age": 18
+  "name": "Egor",
+  "email": "egor@mail.ru",
+  "age": 29
 }
 
 ### Получение списка всех пользователей
