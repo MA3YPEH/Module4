@@ -74,7 +74,11 @@ class UserControllerIT {
                 .andExpect(jsonPath("$.id").exists())
                 .andExpect(jsonPath("$.name").value("Ivan"))
                 .andExpect(jsonPath("$.email").value("ivan@mail.ru"))
-                .andExpect(jsonPath("$.age").value(18));
+                .andExpect(jsonPath("$.age").value(18))
+                .andExpect(jsonPath("$._links.self.href").exists())
+                .andExpect(jsonPath("$._links.update.href").exists())
+                .andExpect(jsonPath("$._links.delete.href").exists())
+                .andExpect(jsonPath("$._links.all-users.href").exists());
     }
 
     @Test
@@ -87,7 +91,9 @@ class UserControllerIT {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedUser.getId()))
                 .andExpect(jsonPath("$.name").value("Egor"))
-                .andExpect(jsonPath("$.email").value("egor@mail.ru"));
+                .andExpect(jsonPath("$.email").value("egor@mail.ru"))
+                .andExpect(jsonPath("$._links.self.href").value("http://localhost/module4/users/" + savedUser.getId()))
+                .andExpect(jsonPath("$._links.all-users.href").value("http://localhost/module4/users"));
     }
 
     @Test
@@ -102,6 +108,21 @@ class UserControllerIT {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    @DisplayName("API: Список пользователей содержит ссылки для каждого элемента")
+    void testGetAllUsersApi() throws Exception {
+        User user1 = new User("User1", "user1@mail.ru", 20);
+        User user2 = new User("User2", "user2@mail.ru", 22);
+        userRepository.save(user1);
+        userRepository.save(user2);
+
+        mockMvc.perform(get("/module4/users"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$._embedded.userResponseDtoList").isArray())
+                .andExpect(jsonPath("$._embedded.userResponseDtoList[0]._links.self.href").exists())
+                .andExpect(jsonPath("$._links.self.href").value("http://localhost/module4/users"));
     }
 
     @Test
