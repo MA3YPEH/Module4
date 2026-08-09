@@ -1,15 +1,24 @@
 package aston.module4.dto;
 
 import aston.module4.entity.User;
+import io.swagger.v3.oas.annotations.media.Schema;
+import org.springframework.hateoas.RepresentationModel;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class UserResponseDto {
+@Schema(description = "DTO ответа с данными пользователя")
+public class UserResponseDto extends RepresentationModel<UserResponseDto> {
+
+    @Schema(description = "Уникальный идентификатор", example = "1")
     private Long id;
+    @Schema(description = "Имя пользователя", example = "Ivan")
     private String name;
+    @Schema(description = "Email пользователя", example = "ivan@mail.ru")
     private String email;
+    @Schema(description = "Возраст пользователя", example = "21")
     private Integer age;
-    private LocalDate createdAt;
+    @Schema(description = "Дата создания пользователя", example = "2026-08-09T12:00:00")
+    private LocalDateTime createdAt;
 
     public static UserResponseDto fromEntity(User user) {
         if (user == null) return null;
@@ -31,6 +40,6 @@ public class UserResponseDto {
     public void setEmail(String email) { this.email = email; }
     public Integer getAge() { return age; }
     public void setAge(Integer age) { this.age = age; }
-    public LocalDate getCreatedAt() { return createdAt; }
-    public void setCreatedAt(LocalDate createdAt) { this.createdAt = createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; }
+    public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }

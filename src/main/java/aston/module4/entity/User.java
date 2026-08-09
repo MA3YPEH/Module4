@@ -2,7 +2,7 @@ package aston.module4.entity;
 
 import jakarta.persistence.*;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "users")
@@ -17,11 +17,11 @@ public class User {
     private String email;
     private int age;
     @Column(nullable = false, updatable = false)
-    private LocalDate created_at;
+    private LocalDateTime created_at;
 
     @PrePersist
     protected void onCreate(){
-        created_at = LocalDate.now();
+        created_at = LocalDateTime.now();
     }
 
     public User(){}
@@ -60,10 +60,10 @@ public class User {
         this.age = age;
     }
 
-    public LocalDate getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return created_at;
     }
-    public void setCreatedAt(LocalDate created_at) {
+    public void setCreatedAt(LocalDateTime created_at) {
         this.created_at = created_at;
     }
 
