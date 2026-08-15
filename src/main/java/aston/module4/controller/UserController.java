@@ -22,7 +22,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @RestController
-@RequestMapping("/module4/users")
+@RequestMapping("/users")
 @Tag(name = "Управление пользователем", description = "CRUD операции")
 public class UserController {
     private static final Logger log = LoggerFactory.getLogger(UserController.class);

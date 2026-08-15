@@ -67,7 +67,7 @@ class UserControllerIT {
         dto.setEmail("ivan@mail.ru");
         dto.setAge(18);
 
-        mockMvc.perform(post("/module4/users")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isCreated())
@@ -87,13 +87,13 @@ class UserControllerIT {
         User user = new User("Egor", "egor@mail.ru", 29);
         User savedUser = userRepository.save(user);
 
-        mockMvc.perform(get("/module4/users/" + savedUser.getId()))
+        mockMvc.perform(get("/users/" + savedUser.getId()))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(savedUser.getId()))
                 .andExpect(jsonPath("$.name").value("Egor"))
                 .andExpect(jsonPath("$.email").value("egor@mail.ru"))
-                .andExpect(jsonPath("$._links.self.href").value("http://localhost/module4/users/" + savedUser.getId()))
-                .andExpect(jsonPath("$._links.all-users.href").value("http://localhost/module4/users"));
+                .andExpect(jsonPath("$._links.self.href").value("http://localhost/users/" + savedUser.getId()))
+                .andExpect(jsonPath("$._links.all-users.href").value("http://localhost/users"));
     }
 
     @Test
@@ -104,7 +104,7 @@ class UserControllerIT {
         dto.setEmail("invalid-email");
         dto.setAge(-1);
 
-        mockMvc.perform(post("/module4/users")
+        mockMvc.perform(post("/users")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(dto)))
                 .andExpect(status().isBadRequest());
@@ -118,11 +118,11 @@ class UserControllerIT {
         userRepository.save(user1);
         userRepository.save(user2);
 
-        mockMvc.perform(get("/module4/users"))
+        mockMvc.perform(get("/users"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$._embedded.userResponseDtoList").isArray())
                 .andExpect(jsonPath("$._embedded.userResponseDtoList[0]._links.self.href").exists())
-                .andExpect(jsonPath("$._links.self.href").value("http://localhost/module4/users"));
+                .andExpect(jsonPath("$._links.self.href").value("http://localhost/users"));
     }
 
     @Test
@@ -131,7 +131,7 @@ class UserControllerIT {
         User user = new User("Igor", "igor@mail.ru", 40);
         User savedUser = userRepository.save(user);
 
-        mockMvc.perform(delete("/module4/users/" + savedUser.getId()))
+        mockMvc.perform(delete("/users/" + savedUser.getId()))
                 .andExpect(status().isNoContent());
 
         assertTrue(userRepository.findById(savedUser.getId()).isEmpty());
