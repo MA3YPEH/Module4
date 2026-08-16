@@ -12,7 +12,7 @@ Content-Type: application/json
 GET http://localhost:8080/module4/users
 
 ### Удаление пользователя
-DELETE http://localhost:8080/module4/users/5
+DELETE http://localhost:8080/module4/users/2
 
 ### Получение пользователя по ID
 GET http://localhost:8080/module4/users/2
